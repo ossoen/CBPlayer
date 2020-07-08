@@ -640,15 +640,20 @@ class DPlayer {
             // console.warn(Hls.version);
             const options = this.options.pluginOptions.hls;
             const p2pConfig = options.p2pConfig;
+            p2pConfig.live = this.options ? this.options.live : false;
+            if (!p2pConfig.useHttpRange) {
+                p2pConfig.useHttpRange = false;
+            }
             // p2pConfig.logLevel = true
             delete options.p2pConfig;
             // options.debug = true;
             options.enableWorker = false;
             const hls = new Hls(options);
-
+            // console.warn(p2pConfig)
             if (P2PEngine.isSupported()) {
                 hls.p2pEngine = new P2PEngine(hls, p2pConfig);        // Key step
             }
+
 
             this.plugins.hls = hls;
             hls.loadSource(video.src);
